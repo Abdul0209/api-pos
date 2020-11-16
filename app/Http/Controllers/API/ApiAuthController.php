@@ -8,7 +8,8 @@ use App\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use App\Mail\ForgetPassword;
+use Illuminate\Support\Facades\Mail;
 
 class ApiAuthController extends Controller
 {
@@ -58,5 +59,18 @@ class ApiAuthController extends Controller
             return response()->json(['status'=>'Success','message'=>$user]);
 
 
+    }
+    public function forget(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        if (!$user) {
+            return response()->json(['status'=>'Success', 'message' => "reset link telah dikirimkan ke email, silahkan cek email Anda"]);
+        }
+        // dd($user->email);
+        Mail::to($user->email)->send(new ForgetPassword($user));
+        return response()->json([
+            'status' => 'Success',
+            'message' => "reset link telah dikirimkan ke email, silahkan cek email Anda"
+        ]);
     }
 }

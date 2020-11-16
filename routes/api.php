@@ -20,3 +20,4 @@ use Illuminate\Http\Request;
 
 Route::post('signup', 'API\ApiAuthController@signup');
 Route::post('login', 'API\ApiAuthController@login');
+Route::post('forget', 'API\ApiAuthController@forget');
