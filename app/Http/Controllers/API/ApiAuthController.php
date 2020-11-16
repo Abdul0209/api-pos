@@ -20,7 +20,9 @@ class ApiAuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            
         ]);
+       
         if ($validator->fails()) {    
             return response()->json([
                 'status' => 'Error',
@@ -28,6 +30,7 @@ class ApiAuthController extends Controller
             ]);
             die();
         }
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -36,8 +39,24 @@ class ApiAuthController extends Controller
         $user->save();
 
         return response()->json([
-            'status' => 'success',
+            'status' => 'Success',
             'data' => $user
         ]);
+    }
+    public function login(Request $request)
+    {
+        $email = $request->email;
+        $password = $request->password;
+
+        $user = User::where('email', '=', $email)->first();
+        if (!$user) {
+            return response()->json(['status'=>'error', 'message' => 'Login Fail, please check email id']);
+        }
+        if (!Hash::check($password, $user->password)) {
+            return response()->json(['status'=>'error', 'message' => 'Login Fail, pls check password']);
+        }   
+            return response()->json(['status'=>'Success','message'=>$user]);
+
+
     }
 }
