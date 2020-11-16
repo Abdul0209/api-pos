@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('reset-password/{token}','HomeController@resetPassword')->name('reset-password');
+Route::post('reset-password/','HomeController@updatePassword')->name('update-password');
